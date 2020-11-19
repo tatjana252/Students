@@ -1,4 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Students.Data;
+using Students.Data.Implementation;
+using Students.Data.UnitOfWork;
 using Students.Domain;
 using System;
 using System.Collections.Generic;
@@ -13,8 +16,29 @@ namespace Students.ConsoleApp
 
         static void Main(string[] args)
         {
-            AddSubjectItemToSubjectNoTracking();
-            context.Dispose();
+            //StudentsContext context = new StudentsContext();
+            //IRepositoryDepartment repositoryDepartment = new RepositoryDepartment(context);
+            //IRepositoryStudent repositoryStudent = new RepositoryStudent(context);
+            //repositoryStudent.Add(new Student { });
+            //repositoryStudent.Add(new Student { });
+            //repositoryStudent.Add(new Student { });
+            //repositoryDepartment.Add(new Department());
+            //repositoryDepartment.Add(new Department());
+            //repositoryDepartment.Add(new Department());
+            //repositoryDepartment.Add(new Department());
+            //repositoryDepartment.Commit();
+
+            using IUnitOfWork uow = new StudentsUnitOfWork(new StudentsContext());
+            uow.Department.Add(new Department());
+            uow.Student.Add(new Student());
+            uow.Commit();
+
+
+
+            //// AddSubjectItemToSubjectNoTracking();
+            //// context.Dispose();
+            //SelectStudentWithSubjectsProjectionQuery();
+            //context.Dispose();
         }
 
         #region department
@@ -106,7 +130,7 @@ namespace Students.ConsoleApp
             s.Department.Name = "Department Update No Tracking";
             newcontext.Update(s);
             newcontext.SaveChanges();
-        } 
+        }
 
         public static void UpdateOnlyDepartmentNoTracking()
         {
@@ -122,6 +146,7 @@ namespace Students.ConsoleApp
         }
         #endregion
 
+        #region SubjectsWithItems
         public static void AddSubjectWithItems()
         {
             Subject subject = new Subject
@@ -155,6 +180,37 @@ namespace Students.ConsoleApp
             newcontext.Update(s); //posto slab objekat ima slozen kljuc, on nije generisan i onda je za njega state modified
             newcontext.Entry(s.Items.Single(i => i.Name == "Vezbe 10")).State = EntityState.Added; //moramo da promenimo state na update
             newcontext.SaveChanges();
+        }
+        #endregion
+
+        public static void AddEnrollments()
+        {
+            context.Add(new Enrollment { StudentId = 1, SubjectId = 2 });
+            context.Add(new Enrollment { StudentId = 1, SubjectId = 5 });
+            context.Add(new Enrollment { StudentId = 2, SubjectId = 1 });
+            context.Add(new Enrollment { StudentId = 2, SubjectId = 3 });
+            context.Add(new Enrollment { StudentId = 2, SubjectId = 5 });
+            context.SaveChanges();
+        }
+
+        public static void SelectStudentWithSubjects()
+        {
+            foreach (Student item in context.Students.Include(s => s.Subjects).ThenInclude(e => e.Subject).ThenInclude(s => s.Department))
+            {
+                Console.WriteLine(item);
+            }
+        }
+
+        public static void SelectStudentWithSubjectsProjectionQuery()
+        {
+            var students = context.Students
+                .Select(s =>
+                new
+                {
+                    s.FirstName,
+                    s.LastName,
+                    Subjects = s.Subjects.Select(e => e.Subject)
+                }).ToList();
         }
     }
 }

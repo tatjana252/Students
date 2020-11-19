@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Students.Domain;
 
 namespace Students.Domain.Migrations
 {
     [DbContext(typeof(StudentsContext))]
-    partial class StudentsContextModelSnapshot : ModelSnapshot
+    [Migration("20201119095312_AddedEnrollment")]
+    partial class AddedEnrollment
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -63,29 +65,11 @@ namespace Students.Domain.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasColumnName("Lastname")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("StudentId");
 
-                    b.ToTable("Student");
-
-                    b.HasData(
-                        new
-                        {
-                            StudentId = 1,
-                            DateOfBirth = new DateTime(1996, 5, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FirstName = "Pera",
-                            LastName = "Peric"
-                        },
-                        new
-                        {
-                            StudentId = 2,
-                            DateOfBirth = new DateTime(1998, 11, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FirstName = "Mika",
-                            LastName = "Mikic"
-                        });
+                    b.ToTable("Students");
                 });
 
             modelBuilder.Entity("Students.Domain.Subject", b =>
@@ -116,7 +100,7 @@ namespace Students.Domain.Migrations
                     b.HasOne("Students.Domain.Student", "Student")
                         .WithMany("Subjects")
                         .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Students.Domain.Subject", "Subject")
