@@ -10,6 +10,8 @@ namespace Students.Domain
     public class Department
     {
         public int DepartmentId { get; set; }
+        [Required]
+        [StringLength(3)]
         public string Name { get; set; }
 
         public override string ToString()

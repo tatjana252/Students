@@ -20,7 +20,7 @@ namespace Students.Domain
             optionsBuilder
                 .UseLoggerFactory(MyLoggerFactory)
                 .EnableSensitiveDataLogging()
-                .UseSqlServer(@"Server=(localdb)\mssqllocaldb; Database=Students1;");
+                .UseSqlServer(@"Server=(localdb)\mssqllocaldb; Database=Students;");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -40,7 +40,7 @@ namespace Students.Domain
             modelBuilder.Entity<Student>().ToTable("Student");
             modelBuilder.Entity<Student>().Property(s => s.LastName).HasColumnName("Lastname");
             modelBuilder.Entity<Student>().Property(s => s.LastName).IsRequired(true);
-
+            
             Seed(modelBuilder);
         }
 

@@ -1,0 +1,26 @@
+﻿@model List<Department>
+@{
+    ViewData["Title"] = "Departments";
+}
+
+
+<h3>Departments</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Details</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (Department d in Model)
+        {
+            <tr>
+                <td>@d.DepartmentId</td>
+                <td>@d.Name</td>
+                <td>@Html.ActionLink("Details", "Details", "Department", new { id = d.DepartmentId })</td>
+            </tr>
+        }
+    </tbody>
+</table>
