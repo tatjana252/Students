@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 
 namespace Students.Data.Implementation
@@ -36,5 +37,9 @@ namespace Students.Data.Implementation
             return context.Departments.ToList();
         }
 
+        public List<Department> Search(Expression<Func<Department, bool>> p)
+        {
+            return context.Departments.Where(p).ToList();
+        }
     }
 }

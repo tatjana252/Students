@@ -31,6 +31,7 @@ namespace Students.Domain
             {
                 s.OwnsMany(s => s.Items);
                 s.HasKey(s => s.SId);
+                s.Property(s => s.SId).HasColumnName("SubjectId");
             });
             modelBuilder.Entity<Enrollment>(e =>
             {

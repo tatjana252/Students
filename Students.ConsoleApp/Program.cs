@@ -28,12 +28,14 @@ namespace Students.ConsoleApp
             //repositoryDepartment.Add(new Department());
             //repositoryDepartment.Commit();
 
-            using IUnitOfWork uow = new StudentsUnitOfWork(new StudentsContext());
-            uow.Department.Add(new Department());
-            uow.Student.Add(new Student());
-            uow.Commit();
-
-
+            //using IUnitOfWork uow = new StudentsUnitOfWork(new StudentsContext());
+            //uow.Department.Add(new Department());
+            //uow.Student.Add(new Student());
+            //uow.Commit();
+            AddSubject();
+            AddSubject();
+            AddSubjectWithItems();
+            AddSubjectWithItems();
 
             //// AddSubjectItemToSubjectNoTracking();
             //// context.Dispose();

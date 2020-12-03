@@ -24,6 +24,7 @@ namespace Students.WebApp.Controllers
             return View("Index", model);
         }
 
+        //localhost/Department/5
         public ActionResult Details([FromRoute(Name ="id")]int idDepartment)
         {
             Department model = unitOfWork.Department.FindById(idDepartment);
@@ -45,6 +46,14 @@ namespace Students.WebApp.Controllers
             {
                 return View("CreateDepartment");
             }
+
+            bool exists = unitOfWork.Department.Search(d => d.Name == department.Name).Any();
+            if (exists)
+            {
+                ModelState.AddModelError("DepartmentName", "Department name already exists!");
+                return View("CreateDepartment");
+            }
+
             unitOfWork.Department.Add(department);
             unitOfWork.Commit();
             return Index();
