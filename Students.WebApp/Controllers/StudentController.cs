@@ -11,81 +11,47 @@ using Students.WebApp.Models;
 
 namespace Students.WebApp.Controllers
 {
-    public class SubjectController : Controller
+    public class StudentController : Controller
     {
         private readonly IUnitOfWork uow;
 
-        public SubjectController(IUnitOfWork uow)
+        public StudentController(IUnitOfWork uow)
         {
             this.uow = uow;
         }
 
-        // GET: SubjectController
+        // GET: StudentController
         public ActionResult Index()
         {
-            return View(uow.Subject.GetAll());
+            return View();
         }
 
-        // GET: SubjectController/Details/5
+        // GET: StudentController/Details/5
         public ActionResult Details(int id)
         {
             return View();
         }
 
-        // GET: SubjectController/Create
+        // GET: StudentController/Create
         public ActionResult Create()
         {
-            List<SelectListItem> departments = new List<SelectListItem>();
-            foreach(Department d in uow.Department.GetAll())
-            {
-                departments.Add(new SelectListItem { Value = d.DepartmentId.ToString(), Text = d.Name }); ;
-            }
-            ViewBag.Departments = departments;
-            ViewData["Departments"] = departments;
+            List<Subject> list = uow.Subject.GetAll();
+            List<SelectListItem> selectList = list.Select(s => new SelectListItem { Text = s.Name, Value = s.SId.ToString() }).ToList();
 
 
-            CreateSubjectViewModel model = new CreateSubjectViewModel { Departments = departments };
-
+            CreateStudentViewModel model = new CreateStudentViewModel {
+                Subjects = selectList
+            };
             return View(model);
         }
 
-        // POST: SubjectController/Create
+        // POST: StudentController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([FromForm]CreateSubjectViewModel subject)
+        public ActionResult Create(CreateStudentViewModel viewmodel)
         {
             try
             {
-                Subject s = new Subject
-                {
-                    DepartmentId = subject.DepartmentId,
-                    ESPB = subject.ESPB,
-                    Name = subject.Name
-                };
-                uow.Subject.Add(s);
-                uow.Commit();
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return RedirectToAction(nameof(Create));
-            }
-        }
-
-        // GET: SubjectController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: SubjectController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -94,13 +60,34 @@ namespace Students.WebApp.Controllers
             }
         }
 
-        // GET: SubjectController/Delete/5
+        // GET: StudentController/Edit/5
+        public ActionResult Edit(int id)
+        {
+            return View();
+        }
+
+        // POST: StudentController/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit(int id, IFormCollection collection)
+        {
+            try
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            catch
+            {
+                return View();
+            }
+        }
+
+        // GET: StudentController/Delete/5
         public ActionResult Delete(int id)
         {
             return View();
         }
 
-        // POST: SubjectController/Delete/5
+        // POST: StudentController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, IFormCollection collection)
