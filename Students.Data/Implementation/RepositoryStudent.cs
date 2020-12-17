@@ -1,6 +1,7 @@
 ﻿using Students.Domain;
 using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Text;
 
 namespace Students.Data.Implementation
@@ -38,6 +39,11 @@ namespace Students.Data.Implementation
         }
 
         public List<Subject> GetEnrolledSubject(Student s)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<Student> Search(Expression<Func<Student, bool>> pred)
         {
             throw new NotImplementedException();
         }

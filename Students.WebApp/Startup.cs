@@ -9,7 +9,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Students.Data.UnitOfWork;
+using Students.Data.UnitOfWork.Users;
 using Students.Domain;
+using Students.WebApp.Filters;
+using Students.WebApp.Middlewares;
 
 namespace Students.WebApp
 {
@@ -25,9 +28,20 @@ namespace Students.WebApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDistributedMemoryCache();
+
+            services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(60);
+            });
+
             services.AddControllersWithViews();
             services.AddScoped<IUnitOfWork, StudentsUnitOfWork>();
+            services.AddScoped<IUsersUoW, UsersUoW>();
+            services.AddScoped<LoggedInUser>();
+            services.AddScoped<NotLoggedIn>();
             services.AddDbContext<StudentsContext>();
+            services.AddDbContext<UserContext>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -47,6 +61,8 @@ namespace Students.WebApp
             app.UseStaticFiles();
 
             app.UseRouting();
+            app.UseSession();
+            //app.UseCheckIfUserIsLoggedInMiddleware();
 
             app.UseAuthorization();
             // localhost:43092/Department/Index/
@@ -54,7 +70,7 @@ namespace Students.WebApp
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Department}/{action=Index}/{id?}");
+                    pattern: "{controller=User}/{action=Index}/{id?}");
             });
         }
     }

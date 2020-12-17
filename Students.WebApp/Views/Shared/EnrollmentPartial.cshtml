@@ -1,0 +1,11 @@
+﻿@model Students.WebApp.Models.EnrollmentViewModel
+
+<tr>
+    <td>@(Model.Num+1)</td>
+    <td>
+        @Model.SubjectId
+    <input hidden value="@Model.SubjectId" name="Student.Subjects[@Model.Num].SubjectId" /></td>
+<td>@Model.Name</td>
+<td>@Model.Department</td>
+<td>@Model.ESPB</td>
+</tr>

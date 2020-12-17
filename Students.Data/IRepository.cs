@@ -1,6 +1,7 @@
 ﻿using Students.Domain;
 using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Text;
 
 namespace Students.Data
@@ -11,6 +12,7 @@ namespace Students.Data
         List<T> GetAll();
         T FindById(int id);
         void Delete(T s);
+        List<T> Search(Expression<Func<T, bool>> pred);
     }
 
 

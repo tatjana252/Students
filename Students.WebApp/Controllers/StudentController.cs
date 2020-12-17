@@ -7,10 +7,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Students.Data.UnitOfWork;
 using Students.Domain;
+using Students.WebApp.Filters;
 using Students.WebApp.Models;
 
 namespace Students.WebApp.Controllers
 {
+    [LoggedInUser]
     public class StudentController : Controller
     {
         private readonly IUnitOfWork uow;
@@ -26,13 +28,8 @@ namespace Students.WebApp.Controllers
             return View();
         }
 
-        // GET: StudentController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
         // GET: StudentController/Create
+        
         public ActionResult Create()
         {
             List<Subject> list = uow.Subject.GetAll();
@@ -52,54 +49,31 @@ namespace Students.WebApp.Controllers
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                uow.Student.Add(viewmodel.Student);
+                uow.Commit();
+                return RedirectToAction("Index", "Department");
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                ModelState.AddModelError(string.Empty, ex.Message);
+                return RedirectToAction("Create");
             }
         }
 
-        // GET: StudentController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: StudentController/Edit/5
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult AddSubject(EnrollmentViewModel request)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            Subject s = uow.Subject.FindById(request.SubjectId);
+            EnrollmentViewModel model = new EnrollmentViewModel {
+                Num = request.Num,
+                SubjectId = request.SubjectId, 
+                Name = s.Name,
+                Department = s.Department.Name,
+                ESPB = s.ESPB
+            };
+            return PartialView("EnrollmentPartial", model);
         }
 
-        // GET: StudentController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
 
-        // POST: StudentController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
     }
 }

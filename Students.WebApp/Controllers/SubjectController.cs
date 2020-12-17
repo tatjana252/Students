@@ -7,10 +7,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Students.Data.UnitOfWork;
 using Students.Domain;
+using Students.WebApp.Filters;
 using Students.WebApp.Models;
 
 namespace Students.WebApp.Controllers
 {
+    [LoggedInUser]
     public class SubjectController : Controller
     {
         private readonly IUnitOfWork uow;

@@ -36,9 +36,11 @@
             <table class="table" id="enrollments">
                 <thead>
                     <tr>
+                        <th>Num</th>
                         <th>Subject Id</th>
                         <th>Name</th>
                         <th>Department name</th>
+                        <th>ESPB</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -55,7 +57,19 @@
     <script>
         $('#add-subject').click(function (e) {
             e.preventDefault();
-            $('#enrollments tbody').append('<tr><td>' + '<input hidden value="' +$('#subject-select').val()+ '" name="Student.Subjects[0].SubjectId"/>' + $('#subject-select').val() + '</td></tr>')
+            //$('#enrollments tbody').append('<tr><td>' + '<input hidden value="' + $('#subject-select').val() + '" name="Student.Subjects[0].SubjectId"/>' + $('#subject-select').val() + '</td></tr>');
+
+            $.ajax({
+                url: '@Url.ActionLink("AddSubject", "Student")',
+                method: 'post',
+                data: { SubjectId: $('#subject-select').val(), Num: $('#enrollments tbody tr').length },
+                success: function (data) {
+                    $('#enrollments tbody').append(data);
+                },
+                error: function () {
+                    alert("Error");
+                }
+            });
         });
     </script>
 }

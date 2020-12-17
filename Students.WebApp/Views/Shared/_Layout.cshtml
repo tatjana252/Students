@@ -6,6 +6,7 @@
     <title>@ViewData["Title"] - Students.WebApp</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
+    @RenderSection("Style", required: false);
 </head>
 <body>
     <header>
@@ -18,8 +19,9 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                     <ul class="navbar-nav flex-grow-1">
+                        @if (ViewBag.IsLoggedIn != null && ViewBag.IsLoggedIn) { 
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Department" asp-action="Index">Home</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Department" asp-action="Index">Departments</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Subject" asp-action="Index">Subjects</a>
@@ -33,6 +35,20 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-controller="Department" asp-action="Create">Add department</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-controller="User" asp-action="Logout">Logout</a>
+                        </li>
+                        }
+                        else
+                        {
+                         <li class="nav-item">
+                            <a class="nav-link text-dark" asp-controller="User" asp-action="Index">Login</a>
+                        </li>
+                         <li class="nav-item">
+                            <a class="nav-link text-dark" asp-controller="User" asp-action="Register">Register</a>
+                        </li>
+
+                        }
                     </ul>
                 </div>
             </div>
